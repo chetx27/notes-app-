@@ -20,6 +20,9 @@ A modern, full-stack notes application built with React and Express.js. Write an
 - **🗑️ Delete Notes**: Remove unwanted notes with a single click.
 - **🔍 Search Functionality**: Find notes quickly by searching content or tags.
 - **📅 Timestamps**: Each note includes creation timestamp for better organization.
+- **🌙 Dark Mode**: Toggle between light and dark themes for comfortable viewing.
+- **📤 Export Notes**: Download all notes as a JSON file for backup or sharing.
+- **📊 Notes Counter**: See the total number of notes in the sidebar.
 
 ## 🛠️ Tech Stack
 
@@ -93,21 +96,25 @@ This creates an optimized build in the `build` folder, ready for deployment.
 1. **Writing Notes**: Type your content in the Markdown editor textarea on the right.
 2. **Adding Tags**: Enter a tag in the input field below the editor.
 3. **Saving Notes**: Click the "Save Note" button to persist your note to the server.
-4. **Viewing All Notes**: Use the sidebar on the left to see all saved notes.
+4. **Viewing All Notes**: Use the sidebar on the left to see all saved notes with a counter.
 5. **Searching Notes**: Use the search bar in the sidebar to filter notes by content or tag.
 6. **Selecting Notes**: Click on any note in the sidebar to load it into the editor.
 7. **Creating New Notes**: Click "New Note" to start a fresh note.
-8. **Deleting Notes**: Click the "Delete" button next to any note to remove it.
-9. **Preview**: See your formatted Markdown in the preview section instantly.
+8. **Deleting Notes**: Click the "🗑️" button next to any note to remove it.
+9. **Dark Mode**: Toggle between light and dark themes using the "Dark Mode" / "Light Mode" button.
+10. **Exporting Notes**: Click "Export Notes" to download all notes as a JSON file.
+11. **Preview**: See your formatted Markdown in the preview section instantly.
 
 ### Example Workflow
 
+- Toggle to Dark Mode for comfortable night-time use.
 - Click "New Note" to start fresh.
 - Write: `# My Project Ideas`
 - Add tag: `work`
 - Save the note.
 - Create another note with different content.
 - Use search to find notes by tag or keyword.
+- Export all notes for backup.
 
 ## 🔌 API Endpoints
 

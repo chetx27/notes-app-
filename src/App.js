@@ -7,6 +7,7 @@ function App() {
   const [tag, setTag] = useState('');
   const [search, setSearch] = useState('');
   const [selectedNoteId, setSelectedNoteId] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     loadNotes();
@@ -62,35 +63,99 @@ function App() {
     setSelectedNoteId(note.id);
   };
 
+  const exportNotes = () => {
+    const dataStr = JSON.stringify(notes, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'notes-export.json';
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
   const filteredNotes = notes.filter(note =>
     note.markdown.toLowerCase().includes(search.toLowerCase()) ||
     note.tag.toLowerCase().includes(search.toLowerCase())
   );
 
+  const appStyle = {
+    display: 'flex',
+    height: '100vh',
+    backgroundColor: darkMode ? '#333' : '#fff',
+    color: darkMode ? '#fff' : '#000',
+  };
+
+  const sidebarStyle = {
+    width: '30%',
+    padding: 20,
+    borderRight: '1px solid #ccc',
+    overflowY: 'auto',
+    backgroundColor: darkMode ? '#444' : '#f9f9f9',
+  };
+
+  const mainStyle = {
+    width: '70%',
+    padding: 20,
+    backgroundColor: darkMode ? '#333' : '#fff',
+  };
+
+  const inputStyle = {
+    width: '100%',
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: darkMode ? '#555' : '#fff',
+    color: darkMode ? '#fff' : '#000',
+    border: '1px solid #ccc',
+  };
+
+  const buttonStyle = {
+    marginBottom: 20,
+    padding: '10px 20px',
+    backgroundColor: darkMode ? '#666' : '#007bff',
+    color: '#fff',
+    border: 'none',
+    cursor: 'pointer',
+  };
+
+  const noteItemStyle = (isSelected) => ({
+    marginBottom: 10,
+    padding: 10,
+    border: '1px solid #ddd',
+    cursor: 'pointer',
+    backgroundColor: isSelected ? (darkMode ? '#666' : '#e9ecef') : (darkMode ? '#555' : '#fff'),
+    color: darkMode ? '#fff' : '#000',
+  });
+
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <div style={{ width: '30%', padding: 20, borderRight: '1px solid #ccc', overflowY: 'auto' }}>
-        <h2>All Notes</h2>
+    <div style={appStyle}>
+      <div style={sidebarStyle}>
+        <h2>All Notes ({notes.length})</h2>
+        <button onClick={() => setDarkMode(!darkMode)} style={buttonStyle}>
+          {darkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
+        <button onClick={exportNotes} style={{...buttonStyle, backgroundColor: darkMode ? '#888' : '#28a745'}}>
+          Export Notes
+        </button>
         <input
           type="text"
           placeholder="Search notes..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ width: '100%', marginBottom: 20, padding: 10 }}
+          style={inputStyle}
         />
-        <button onClick={() => { setMarkdown('# New Note\nType here...'); setTag(''); setSelectedNoteId(null); }} style={{ marginBottom: 20 }}>New Note</button>
+        <button onClick={() => { setMarkdown('# New Note\nType here...'); setTag(''); setSelectedNoteId(null); }} style={buttonStyle}>New Note</button>
         {filteredNotes.map(note => (
-          <div key={note.id} style={{ marginBottom: 10, padding: 10, border: '1px solid #ddd', cursor: 'pointer', backgroundColor: selectedNoteId === note.id ? '#f0f0f0' : 'white' }} onClick={() => selectNote(note)}>
+          <div key={note.id} style={noteItemStyle(selectedNoteId === note.id)} onClick={() => selectNote(note)}>
             <h4>{note.markdown.split('\n')[0]}</h4>
             <p>Tag: {note.tag}</p>
             <small>{new Date(note.timestamp).toLocaleString()}</small>
-            <button onClick={(e) => { e.stopPropagation(); deleteNote(note.id); }} style={{ marginLeft: 10, color: 'red' }}>Delete</button>
+            <button onClick={(e) => { e.stopPropagation(); deleteNote(note.id); }} style={{ marginLeft: 10, color: 'red', background: 'none', border: 'none', cursor: 'pointer' }}>🗑️</button>
           </div>
         ))}
       </div>
-      <div style={{ width: '70%', padding: 20 }}>
+      <div style={mainStyle}>
         <textarea
-          style={{ width: '100%', height: 200, marginBottom: 20 }}
+          style={{...inputStyle, height: 200}}
           value={markdown}
           onChange={(e) => setMarkdown(e.target.value)}
           placeholder="Type your Markdown here..."
@@ -100,12 +165,14 @@ function App() {
           placeholder="Tag"
           value={tag}
           onChange={(e) => setTag(e.target.value)}
-          style={{ marginBottom: 20, width: '100%' }}
+          style={inputStyle}
         />
-        <button onClick={saveNote} style={{ marginBottom: 20 }}>Save Note</button>
+        <button onClick={saveNote} style={buttonStyle}>Save Note</button>
         <div>
           <h2>Preview</h2>
-          <ReactMarkdown>{markdown}</ReactMarkdown>
+          <div style={{ border: '1px solid #ccc', padding: 10, minHeight: 200, backgroundColor: darkMode ? '#444' : '#f9f9f9' }}>
+            <ReactMarkdown>{markdown}</ReactMarkdown>
+          </div>
         </div>
       </div>
     </div>
